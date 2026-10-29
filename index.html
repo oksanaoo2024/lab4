@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Університет — таблиці сутностей</title>
+  <style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #182235;
+  background: #f3f6fb;
+}
+
+body {
+  margin: 0;
+  padding: 36px 18px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e1e7f0;
+  border-radius: 18px;
+  box-shadow: 0 12px 35px rgba(29, 48, 80, 0.08);
+  overflow: hidden;
+}
+
+header {
+  padding: 32px 32px 24px;
+  background: linear-gradient(120deg, #eff5ff, #fafcff);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #3264c8;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(25px, 4vw, 36px);
+}
+
+.subtitle {
+  margin: 12px 0 0;
+  color: #66738a;
+  line-height: 1.5;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  padding: 18px 24px 0;
+  border-bottom: 1px solid #e6ebf3;
+  flex-wrap: wrap;
+}
+
+.tab {
+  border: 0;
+  background: transparent;
+  color: #647189;
+  padding: 13px 18px;
+  border-radius: 10px 10px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+
+.tab:hover {
+  background: #f4f7fc;
+  color: #2456b5;
+}
+
+.tab.active {
+  color: #2456b5;
+  background: #f1f5ff;
+  border-bottom-color: #3264c8;
+}
+
+.table-panel {
+  display: none;
+  padding: 26px 28px 32px;
+}
+
+.table-panel.active {
+  display: block;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 23px;
+}
+
+.panel-heading p {
+  margin: 0;
+  color: #69758a;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.count {
+  white-space: nowrap;
+  background: #eaf1ff;
+  color: #2456b5;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5eaf2;
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+  font-size: 14px;
+}
+
+thead {
+  background: #f5f7fb;
+}
+
+th, td {
+  text-align: left;
+  padding: 14px 15px;
+  border-bottom: 1px solid #e9edf4;
+  vertical-align: top;
+}
+
+th {
+  color: #53617a;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover {
+  background: #f8faff;
+}
+
+td:first-child {
+  color: #2456b5;
+  font-weight: 700;
+}
+
+footer {
+  border-top: 1px solid #e8edf4;
+  padding: 16px 28px;
+  color: #7a869a;
+  font-size: 12px;
+}
+
+@media (max-width: 650px) {
+  body { padding: 12px; }
+  header { padding: 24px 20px; }
+  .tabs { padding: 12px 12px 0; gap: 4px; }
+  .tab { padding: 11px 12px; font-size: 14px; }
+  .table-panel { padding: 22px 16px; }
+  .panel-heading { flex-direction: column; }
+}
+
+/* Елементи керування для редагування та видалення рядків */
+.editable-cell {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.editable-cell:hover {
+  background: #eef4ff;
+  box-shadow: inset 0 0 0 1px #c8d8ff;
+}
+
+.cell-editor {
+  width: 100%;
+  min-width: 90px;
+  padding: 7px 8px;
+  border: 1px solid #3264c8;
+  border-radius: 5px;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+}
+
+.action-cell {
+  width: 58px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.delete-button {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 7px;
+  background: #fff0f0;
+  color: #c62828;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background: #ffdada;
+}
+
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <p class="eyebrow">Лабораторна робота · Завдання №4</p>
+      <h1>Інформаційна система університету</h1>
+      <p class="subtitle">Редагування та видалення записів, локальне збереження і синхронізація вкладок браузера.</p>
+    </header>
+
+    <nav class="tabs" aria-label="Вибір сутності">
+      <button class="tab active" data-target="students" aria-selected="true">Студенти</button>
+      <button class="tab" data-target="teachers" aria-selected="false">Викладачі</button>
+      <button class="tab" data-target="courses" aria-selected="false">Дисципліни</button>
+    </nav>
+
+    <section class="table-panel active" id="students">
+      <div class="panel-heading">
+        <div>
+          <h2>Студенти</h2>
+          <p>Атрибути: ID, ПІБ, група, спеціальність, курс, середній бал, електронна пошта.</p>
+        </div>
+        <span class="count" id="students-count"></span>
+      </div>
+      <div class="table-wrap"><table><thead id="students-head"></thead><tbody id="students-body"></tbody></table></div>
+    </section>
+
+    <section class="table-panel" id="teachers">
+      <div class="panel-heading">
+        <div>
+          <h2>Викладачі</h2>
+          <p>Атрибути: ID, ПІБ, кафедра, посада, науковий ступінь, дисципліна зі списку, електронна пошта.</p>
+        </div>
+        <span class="count" id="teachers-count"></span>
+      </div>
+      <div class="table-wrap"><table><thead id="teachers-head"></thead><tbody id="teachers-body"></tbody></table></div>
+    </section>
+
+    <section class="table-panel" id="courses">
+      <div class="panel-heading">
+        <div>
+          <h2>Дисципліни</h2>
+          <p>Атрибути: ID, назва, кредити, семестр, форма контролю, викладач зі списку, кількість годин.</p>
+        </div>
+        <span class="count" id="courses-count"></span>
+      </div>
+      <div class="table-wrap"><table><thead id="courses-head"></thead><tbody id="courses-body"></tbody></table></div>
+    </section>
+
+    <footer>Дані зберігаються в localStorage. Зміни автоматично синхронізуються між вкладками цього самого браузера.</footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
